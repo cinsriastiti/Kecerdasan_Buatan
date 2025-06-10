@@ -5,7 +5,6 @@ import os
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-# Data preprocessing
 train_datagen = ImageDataGenerator(rescale=1./255,
                                    shear_range=0.2,
                                    zoom_range=0.2,
@@ -24,7 +23,6 @@ test_set = test_datagen.flow_from_directory(
     batch_size=32,
     class_mode='categorical')
 
-# CNN model
 cnn = tf.keras.models.Sequential()
 cnn.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 3)))
 cnn.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
@@ -36,14 +34,11 @@ cnn.add(tf.keras.layers.Dense(units=3, activation='softmax'))
 
 cnn.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Training
 cnn.fit(x=training_set, validation_data=test_set, epochs=25)
 
-# Webcam prediction
 vid = cv2.VideoCapture(1)
-class_labels = list(training_set.class_indices.keys())  # e.g., ['apple', 'banana', 'grape']
+class_labels = list(training_set.class_indices.keys()) 
 
-# Thresholds per class (match label names from folder names)
 threshold = {
     'Anggur': 0.80,
     'Pisang': 0.70,
@@ -68,7 +63,6 @@ while True:
     label = class_labels[label_index]
     confidence = prediction[0][label_index]
 
-    # Bounding box setup
     height, width, _ = frame.shape
     box_width, box_height = 200, 200
     start_x = width // 2 - box_width // 2
@@ -77,13 +71,11 @@ while True:
     end_y = start_y + box_height
     cv2.rectangle(frame, (start_x, start_y), (end_x, end_y), (0, 255, 0), 2)
 
-    # Apply threshold decision
     if confidence >= threshold.get(label, 0.8):
         display_text = f'{label} ({confidence:.2f})'
     else:
         display_text = f'Unknown ({confidence:.2f})'
 
-    # Display label
     cv2.putText(frame, display_text, (start_x, start_y - 10),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
