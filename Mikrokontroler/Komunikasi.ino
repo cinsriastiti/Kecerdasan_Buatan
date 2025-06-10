@@ -6,35 +6,31 @@ Servo servo3;
 
 void setup() {
   Serial.begin(115200);
-  // Pastikan pin ini adalah pin PWM yang benar di ESP32 Anda!
-  // Misalnya, GPIO13, GPIO12, GPIO11 (jika pin 11 valid untuk servo di ESP32)
   servo1.attach(13);
   servo2.attach(12);
-  servo3.attach(14); // Double check if pin 11 is a valid PWM pin for servo on your ESP32 board
+  servo3.attach(14); 
 }
 
 void loop() {
   if (Serial.available()) {
-    String input = Serial.readStringUntil('\n'); // Membaca hingga karakter newline
-    input.trim(); // Menghilangkan spasi atau karakter tidak terlihat di awal/akhir
+    String input = Serial.readStringUntil('\n'); 
+    input.trim(); 
 
-    // Pastikan string "Apel", "Pisang", "Anggur" sama persis
-    // dengan yang dikirim dari Python (termasuk kapitalisasi!)
     if (input == "Apel") {
-      Serial.println("Menerima Apel"); // Debugging
-      servo1.write(30);   // Arah ke tempat apel
+      Serial.println("Menerima Apel");
+      servo1.write(30);  
       delay(1000);
-      servo1.write(90);   // Kembali ke posisi netral
+      servo1.write(90); 
     } else if (input == "Pisang") {
-      Serial.println("Menerima Pisang"); // Debugging
-      servo2.write(90);   // Arah ke tempat pisang
+      Serial.println("Menerima Pisang"); 
+      servo2.write(90);
       delay(1000);
-      servo2.write(90);   // Kembali ke posisi netral (posisi awal sudah 90, jadi bisa dihilangkan)
+      servo2.write(90); 
     } else if (input == "Anggur") {
-      Serial.println("Menerima Anggur"); // Debugging
-      servo3.write(150);  // Arah ke tempat anggur
+      Serial.println("Menerima Anggur");
+      servo3.write(150);
       delay(1000);
-      servo3.write(90);   // Kembali ke posisi netral
+      servo3.write(90); 
     }
   }
 }
